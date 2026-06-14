@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "GitHub README Generator",
+  "version": "1.0",
+  "description": "Generate README files for GitHub repositories",
+  "permissions": [],
+  "host_permissions": [
+    "https://github.com/*",
+    "https://api.github.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://github.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "styles.css"
+      ]
+    }
+  ]
+}
