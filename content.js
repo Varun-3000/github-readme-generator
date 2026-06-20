@@ -1,3 +1,4 @@
+//content.js
 console.log("README Generator Extension Loaded");
 
 checkRepository();
@@ -144,24 +145,21 @@ function addGenerateButton() {
 
             console.log("Generate button clicked");
 
-            const files =
-                await getRepositoryFiles(owner, repo);
+            const metadata = await getRepositoryMetadata(owner, repo);
 
-            console.log("Files:", files);
+            const files = await getRepositoryFiles(owner, repo);
 
-            const techStack = detectTechStack(files);
+            const analysis = await analyzeRepository(metadata, files);
 
-            console.log("Detected Technologies:");
+            console.log("Repository Analysis");
+            console.table(analysis.repository);
 
-            console.table(techStack);
+            console.log("Repository Type:",analysis.repositoryType);
 
-            console.log("Tech Stack:", techStack);
+            console.log("Technologies:");
+            console.table(analysis.technologies);
 
-            const readme =
-                generateReadme(repo, techStack);
-
-            console.log(readme);
-
+            const readme =  generateReadme(analysis);
             await navigator.clipboard.writeText(readme);
 
             alert("README copied to clipboard");
@@ -184,110 +182,7 @@ function addGenerateButton() {
         document.body.appendChild(button);
     };
 }
-async function getDefaultBranch(owner, repo) {
 
-    const response = await fetch(
-        `https://api.github.com/repos/${owner}/${repo}`
-    );
-
-    const data = await response.json();
-
-    return data.default_branch;
-}
-
-async function getRepositoryFiles(owner, repo) {
-
-    const branch = await getDefaultBranch(owner, repo);
-
-    const response = await fetch(
-        `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`
-    );
-
-    const data = await response.json();
-
-    return data.tree.map(item => item.path);
-}
-
-function detectTechStack(files) {
-
-    const technologies = [];
-
-    const allFiles = files.join(" ").toLowerCase();
-
-    if (allFiles.includes(".csv")) {
-        technologies.push("CSV Datasets");
-    }
-
-    if (allFiles.includes(".arff")) {
-        technologies.push("ARFF Datasets");
-    }
-
-    if (allFiles.includes(".tar.xz")) {
-        technologies.push("Compressed Datasets");
-    }
-
-    if (allFiles.includes("image data")) {
-        technologies.push("Image Data");
-    }
-
-    if (allFiles.includes("video data")) {
-        technologies.push("Video Data");
-    }
-
-    if (allFiles.includes("time series")) {
-        technologies.push("Time Series Data");
-    }
-
-    if (allFiles.includes("graph data")) {
-        technologies.push("Graph Data");
-    }
-
-    if (files.includes("requirements.txt")) {
-        technologies.push("Python");
-    }
-
-    if (files.includes("package.json")) {
-        technologies.push("Node.js");
-    }
-
-    if (files.includes("pom.xml")) {
-        technologies.push("Java Maven");
-    }
-
-    return technologies;
-}
-
-function generateReadme(repo, techStack) {
-
-    return `
-# ${repo}
-
-## Overview
-
-This repository contains datasets and resources for anomaly detection research.
-
-## Repository Contents
-
-${techStack.map(t => `- ${t}`).join("\n")}
-
-## Dataset Categories
-
-- Numerical Data
-- Categorical Data
-- Graph Data
-- Image Data
-- Video Data
-- Time Series Data
-
-## Usage
-
-Download the datasets relevant to your experiments and follow the documentation inside each folder.
-
-## License
-
-Refer to the LICENSE file.
-`;
-}
 
 let lastUrl = location.href;
 
