@@ -17,7 +17,14 @@
     "github.js",
     "analyzer.js",
     "generator.js",
-    "content.js"
+    "content.js",
+    "analyzerRules.js",
+    "datasetAnalyzer.js",
+    "generators/datasetGenerator.js",
+    "generators/pythonGenerator.js",
+    "generators/nodeGenerator.js",
+    "generators/javaGenerator.js",
+    "generators/genericGenerator.js"
     ],
       "css": [
         "styles.css"

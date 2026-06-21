@@ -1,24 +1,20 @@
 function generateReadme(analysis) {
 
-    return `
-# ${analysis.repository.name}
+    switch (analysis.repositoryType) {
 
-## Overview
+        case "Dataset Repository":
+            return generateDatasetReadme(analysis);
 
-${analysis.repository.description || "No description available."}
+        case "Python Application":
+            return generatePythonReadme(analysis);
 
-## Repository Type
+        case "Node.js Application":
+            return generateNodeReadme(analysis);
 
-${analysis.repositoryType}
+        case "Java Application":
+            return generateJavaReadme(analysis);
 
-## Technologies
-
-${analysis.technologies
-    .map(t => `- ${t}`)
-    .join("\n")}
-
-## License
-
-${analysis.repository.license || "Not specified"}
-`;
+        default:
+            return generateGenericReadme(analysis);
+    }
 }

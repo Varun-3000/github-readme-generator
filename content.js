@@ -151,14 +151,19 @@ function addGenerateButton() {
 
             const analysis = await analyzeRepository(metadata, files);
 
-            console.log("Repository Analysis");
-            console.table(analysis.repository);
-
-            console.log("Repository Type:",analysis.repositoryType);
-
-            console.log("Technologies:");
-            console.table(analysis.technologies);
-
+            console.table({
+                Type: analysis.repositoryType,
+                Technologies: analysis.technologies.join(", "),
+                Frameworks: analysis.frameworks.join(", "),
+                BuildTool: analysis.buildTool,
+                PackageManager: analysis.packageManager,
+                CI: analysis.ci.join(", "),
+                Docker: analysis.docker.join(", "),
+                Kubernetes: analysis.kubernetes,
+                Testing: analysis.testing.join(", "),
+                Databases: analysis.databases.join(", "),
+                EntryPoint: analysis.entryPoint
+            });
             const readme =  generateReadme(analysis);
             await navigator.clipboard.writeText(readme);
 
